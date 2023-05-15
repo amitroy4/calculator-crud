@@ -1,7 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
+import {getDatabase,ref,set,push} from "firebase/database";
+import { useState } from 'react';
 
 function App() {
+  const db = getDatabase();
+  let [text,setText] = useState("")
+  let handleSubmit = ()=>{
+    set(push(ref(db,'calculatorapp/')),{
+      value : text
+    }).then(()=>{
+      console.log("data gese")
+    })
+  }
+
   return (
     <section className='container mx-auto mt-[20px]'>
       <h1 className='font-black text-4xl text-center mb-[20px]'>Smart calculator</h1>
@@ -11,7 +23,7 @@ function App() {
           <div className='flex justify-between'>
             <div>
               <h4>Addition</h4>
-              <input />
+              <input onChange={(e)=> setText(e.target.value)} />
             </div>
             <div>
               <h4>Substruction</h4>
@@ -20,7 +32,7 @@ function App() {
           </div>
 
           <div className='flex justify-center mt-[50px]'>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded block">Button</button>
+            <button onClick ={handleSubmit} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded block">Button</button>
           </div>
 
           <div className='text-center mt-[20px] mb-[50px]'>
