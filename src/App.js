@@ -10,7 +10,7 @@ function App() {
     set(push(ref(db,'calculatorapp/')),{
       value : text
     }).then(()=>{
-      console.log("data gese")
+      console.log("data send")
     })
   }
 
