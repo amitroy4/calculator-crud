@@ -56,7 +56,7 @@ function App() {
 
           set(push(ref(db, 'calculatorapp/')), {
             prevalue: saveTotal,
-            value: sub,
+            value: sub * 1,
             operator: "Substraction",
             total: saveTotal - sub,
           }).then(() => {
@@ -79,7 +79,7 @@ function App() {
         } else if (multi >= 1) {
           set(push(ref(db, 'calculatorapp/')), {
             prevalue: saveTotal,
-            value: multi,
+            value: multi * 1,
             operator: "Multiply",
             total: multi * 1 * saveTotal * 1,
           }).then(() => {
@@ -104,7 +104,7 @@ function App() {
           } else {
             set(push(ref(db, 'calculatorapp/')), {
               prevalue: saveTotal,
-              value: div,
+              value: div * 1,
               operator: "Divide",
               total: saveTotal / div,
             }).then(() => {
