@@ -124,9 +124,7 @@ function App() {
         if (div == 0) {
           setError("Cannot divide with 0")
         } else{
-          if (saveTotal == 0) {
-            setError("Can't divide 0 with any number")
-          } else {
+           if (div != 0 ){
             set(push(ref(db, 'calculatorapp/')), {
               prevalue: saveTotal,
               value: div * 1,
