@@ -91,7 +91,7 @@ function App() {
       if (multi * 1 - 10 || multi == 10) {
         if (multi == 0) {
           setError("Cannot Multiply by 0")
-        } else if (multi >= 1) {
+        }else{
           if (!haveValue) {
             set(push(ref(db, 'calculatorapp/')), {
               prevalue: 0,
@@ -113,8 +113,6 @@ function App() {
             })
             setError("")
           }
-        } else {
-          setError("Not a positive number")
         }
       } else {
         setError("Not a number")
@@ -125,7 +123,7 @@ function App() {
       if (div * 1 - 10 || div == 10) {
         if (div == 0) {
           setError("Cannot divide with 0")
-        } else if (div >= 1) {
+        } else{
           if (saveTotal == 0) {
             setError("Can't divide 0 with any number")
           } else {
@@ -139,8 +137,6 @@ function App() {
             })
             setError("")
           }
-        } else {
-          setError("Not a positive number")
         }
       } else {
         setError("Not a number")
@@ -214,25 +210,37 @@ function App() {
     if (u1 != "" && u2 != "") {
       if ((u1 * 1 - 10 || u1 == 10) && (u2 * 1 - 10 || u2 == 10)) {
         if (operatorId == "Add") {
-          update(ref(db, 'calculatorapp/' + editId), {
-            prevalue: u2 * 1,
-            value: u1 * 1,
-            operator: "Add",
-            total: u1 * 1 + u2 * 1,
-          }).then(() => {
-            setUError("")
-            setEdit(true)
-          })
+          if(u1>-1 && u2>-1){
+            update(ref(db, 'calculatorapp/' + editId), {
+              prevalue: u2 * 1,
+              value: u1 * 1,
+              operator: "Add",
+              total: u1 * 1 + u2 * 1,
+            }).then(() => {
+              setUError("")
+              setError("")
+              setEdit(true)
+            })
+          }else{
+            setUError("Please Input Positive Number")
+          }
+          
         } else if (operatorId == "Substraction") {
-          update(ref(db, 'calculatorapp/' + editId), {
-            prevalue: u2 * 1,
-            value: u1 * 1,
-            operator: "Substraction",
-            total: u2 * 1 - u1 * 1,
-          }).then(() => {
-            setUError("")
-            setEdit(true)
-          })
+          if(u1>-1 && u2>-1){
+            update(ref(db, 'calculatorapp/' + editId), {
+              prevalue: u2 * 1,
+              value: u1 * 1,
+              operator: "Substraction",
+              total: u2 * 1 - u1 * 1,
+            }).then(() => {
+              setUError("")
+              setError("")
+              setEdit(true)
+            })
+          }else{
+            setUError("Please Input Positive Number")
+          }
+
         } else if (operatorId == "Multiply") {
           update(ref(db, 'calculatorapp/' + editId), {
             prevalue: u2 * 1,
@@ -241,6 +249,7 @@ function App() {
             total: u2 * 1 * u1 * 1,
           }).then(() => {
             setUError("")
+            setError("")
             setEdit(true)
           })
         } else if (operatorId == "Divide") {
@@ -251,6 +260,7 @@ function App() {
             total: u2 * 1 / u1 * 1,
           }).then(() => {
             setUError("")
+            setError("")
             setEdit(true)
           })
         } else { }
