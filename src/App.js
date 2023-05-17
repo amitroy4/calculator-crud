@@ -1,32 +1,130 @@
-import logo from './logo.svg';
+
 import './App.css';
 import { getDatabase, ref, set, push, onValue, remove, update } from "firebase/database";
 import { useEffect, useState } from 'react';
 
 function App() {
   const db = getDatabase();
-  let [number, setNumber] = useState("")
+  let [add, setAdd] = useState("")
+  let [sub, setSub] = useState("")
+  let [multi, setMulti] = useState("")
+  let [div, setDiv] = useState("")
+  let [error, setError] = useState("")
+  let [msg, setMsg] = useState("")
   let [numberArr, setNumberArr] = useState([])
   let [saveTotal, setSaveTotal] = useState("")
   let [haveValue, setHaveValue] = useState(true)
 
   let handleSubmit = () => {
-    if (!haveValue) {
-      set(push(ref(db, 'calculatorapp/')), {
-        prevalue: 0,
-        value: number,
-        operator: "Add",
-      }).then(() => {
-        console.log(" 0 data send")
-      })
+    if (add == "" && sub == "" && multi == "" && div == "") {
+      setError("No input")
+    } else if (add != "" && sub == "" && multi == "" && div == "") {
+      if ((add * 1 - 10) || add == 10) {
+        if (add > -1) {
+          if (!haveValue) {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: 0,
+              value: add * 1,
+              operator: "Add",
+              total: 0 * 1 + add * 1,
+            }).then(() => {
+              console.log(" 0 data send")
+            })
+            setError("")
+          } else {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: saveTotal,
+              value: add * 1,
+              operator: "Add",
+              total: saveTotal + add * 1,
+            }).then(() => {
+              console.log(" 1 data send")
+            })
+            setError("")
+          }
+        } else {
+          setError("Not a positive number")
+        }
+
+      } else {
+        setError("Not a number")
+      }
+      setAdd("")
+    } else if (add == "" && sub != "" && multi == "" && div == "") {
+      if (sub * 1 - 10 || sub == 10) {
+        if (sub > -1) {
+
+          set(push(ref(db, 'calculatorapp/')), {
+            prevalue: saveTotal,
+            value: sub,
+            operator: "Substraction",
+            total: saveTotal - sub,
+          }).then(() => {
+            console.log(" Sub data send")
+          })
+          setError("")
+
+        } else {
+          setError("Not a positive number")
+        }
+      } else {
+        setError("Not a number")
+      }
+      setSub("")
+    }
+    else if (add == "" && sub == "" && multi != "" && div == "") {
+      if (multi * 1 - 10 || multi == 10) {
+        if (multi == 0) {
+          setError("Cannot Multiply by 0")
+        } else if (multi >= 1) {
+          set(push(ref(db, 'calculatorapp/')), {
+            prevalue: saveTotal,
+            value: multi,
+            operator: "Multiply",
+            total: multi * 1 * saveTotal * 1,
+          }).then(() => {
+            console.log(" Multiply data send")
+          })
+          setError("")
+        } else {
+          setError("Not a positive number")
+        }
+      } else {
+        setError("Not a number")
+      }
+      setMulti("")
+    } else if (add == "" && sub == "" && multi == "" && div != "") {
+
+      if (div * 1 - 10 || div == 10) {
+        if (div == 0) {
+          setError("Cannot divide with 0")
+        } else if (div >= 1) {
+          if (saveTotal == 0) {
+            setError("Can't divide 0 with any number")
+          } else {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: saveTotal,
+              value: div,
+              operator: "Divide",
+              total: saveTotal / div,
+            }).then(() => {
+              console.log(" Div data send")
+            })
+            setError("")
+          }
+        } else {
+          setError("Not a positive number")
+        }
+      } else {
+        setError("Not a number")
+      }
+      setDiv("")
     } else {
-      set(push(ref(db, 'calculatorapp/')), {
-        prevalue: saveTotal,
-        value: number,
-        operator: "Add",
-      }).then(() => {
-        console.log(" 1 data send")
-      })
+      setError("More than one input")
+      setAdd("")
+      setSub("")
+      setMulti("")
+      setDiv("")
     }
   }
 
@@ -61,7 +159,7 @@ function App() {
 
   useEffect(() => {
     numberArr.map((item) => (
-      setSaveTotal(item.value * 1 + item.prevalue * 1)
+      setSaveTotal(item.total)
     ))
     console.log(saveTotal)
   })
@@ -80,16 +178,16 @@ function App() {
     <section className='container mx-auto mt-[20px]'>
       <h1 className='font-black text-4xl text-center mb-[20px]'>Smart calculator</h1>
       <div className='flex justify-between'>
-        <div className='w-[850px] bg-blue-400 p-5'>
+        <div className='w-[50%] bg-blue-400 p-5'>
 
           <div className='flex justify-between'>
             <div>
               <h4>Addition</h4>
-              <input onChange={(e) => setNumber(e.target.value)} />
+              <input onChange={(e) => setAdd(e.target.value)} value={add} />
             </div>
             <div>
               <h4>Substruction</h4>
-              <input />
+              <input onChange={(e) => setSub(e.target.value)} value={sub} />
             </div>
           </div>
 
@@ -98,30 +196,33 @@ function App() {
           </div>
 
           <div className='text-center mt-[20px] mb-[50px]'>
-            <h3 className='font-semibold text-4xl'>
-              {saveTotal}
-            </h3>
-            <h4 className='font-medium text-2xl text-red-700'>Error mSG</h4>
+            {
+              !haveValue
+                ? <h3 className='font-semibold text-4xl'>0</h3>
+                : <h3 className='font-semibold text-4xl'>{saveTotal}</h3>
+            }
+
+            <h4 className='font-medium text-2xl text-red-700'>{error}</h4>
           </div>
 
           <div className='flex justify-between'>
             <div>
               <h4>Multiplicatiion</h4>
-              <input />
+              <input onChange={(e) => setMulti(e.target.value)} value={multi} />
             </div>
             <div>
               <h4>Division</h4>
-              <input />
+              <input onChange={(e) => setDiv(e.target.value)} value={div} />
             </div>
           </div>
 
         </div>
-        <div className='w-[600px] bg-red-400 p-5'>
+        <div className='w-[50%] bg-red-400 p-5'>
           <div className='text-center font-medium text-2xl'>History</div>
           <div>
             <ol className='list-decimal'>
               {numberArr.map((item, index) => (
-                <li key={index}>We {item.operator} {item.value} with {item.prevalue} and result is {item.value * 1 + item.prevalue * 1}.
+                <li key={index}>We {item.operator} {item.value} with {item.prevalue} and result is {item.total}.
                   <button onClick={() => handleDelete(item.id)} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Delete</button>
                   <button className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Edit</button></li>
               ))}
