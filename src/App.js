@@ -10,10 +10,15 @@ function App() {
   let [multi, setMulti] = useState("")
   let [div, setDiv] = useState("")
   let [error, setError] = useState("")
-  let [msg, setMsg] = useState("")
+  let [uError, setUError] = useState("")
   let [numberArr, setNumberArr] = useState([])
   let [saveTotal, setSaveTotal] = useState("")
   let [haveValue, setHaveValue] = useState(true)
+  let [edit, setEdit] = useState(true)
+  let [editId, setEditId] = useState("")
+  let [operatorId, setOperatortId] = useState("")
+  let [u1, setU1] = useState("")
+  let [u2, setU2] = useState("")
 
   let handleSubmit = () => {
     if (add == "" && sub == "" && multi == "" && div == "") {
@@ -195,6 +200,76 @@ function App() {
     })
   }
 
+  let handleEdit = (item) => {
+    setEdit(false)
+    setEditId(item.id)
+    setOperatortId(item.operator)
+    setU1(item.value)
+    setU2(item.prevalue)
+
+  }
+
+
+  let handleUpdate = () => {
+    if (u1 != "" && u2 != "") {
+      if ((u1 * 1 - 10 || u1 == 10) && (u2 * 1 - 10 || u2 == 10)) {
+        if (operatorId == "Add") {
+          update(ref(db, 'calculatorapp/' + editId), {
+            prevalue: u2 * 1,
+            value: u1 * 1,
+            operator: "Add",
+            total: u1 * 1 + u2 * 1,
+          }).then(() => {
+            setUError("")
+            setEdit(true)
+          })
+        } else if (operatorId == "Substraction") {
+          update(ref(db, 'calculatorapp/' + editId), {
+            prevalue: u2 * 1,
+            value: u1 * 1,
+            operator: "Substraction",
+            total: u2 * 1 - u1 * 1,
+          }).then(() => {
+            setUError("")
+            setEdit(true)
+          })
+        } else if (operatorId == "Multiply") {
+          update(ref(db, 'calculatorapp/' + editId), {
+            prevalue: u2 * 1,
+            value: u1 * 1,
+            operator: "Multiply",
+            total: u2 * 1 * u1 * 1,
+          }).then(() => {
+            setUError("")
+            setEdit(true)
+          })
+        } else if (operatorId == "Divide") {
+          update(ref(db, 'calculatorapp/' + editId), {
+            prevalue: u2 * 1,
+            value: u1 * 1,
+            operator: "Divide",
+            total: u2 * 1 / u1 * 1,
+          }).then(() => {
+            setUError("")
+            setEdit(true)
+          })
+        } else { }
+      } else {
+        setUError("Not a number")
+      }
+    } else {
+      setUError("Have a empty input")
+    }
+
+
+  }
+
+
+  let handleCancel = () => {
+    setEdit(true)
+    setUError("")
+  }
+
 
   return (
     <section className='container mx-auto mt-[20px]'>
@@ -241,12 +316,21 @@ function App() {
         </div>
         <div className='w-[50%] bg-red-400 p-5'>
           <div className='text-center font-medium text-2xl'>History</div>
+          {
+            !edit && <>We {operatorId}
+              <input onChange={(e) => setU1(e.target.value)} value={u1} className='ml-[5px] mr-[5px]' /> with
+              <input onChange={(e) => setU2(e.target.value)} value={u2} className='ml-[5px] mr-[5px]' />
+              <button onClick={handleUpdate} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Update</button>
+              <button onClick={handleCancel} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Cancel</button>
+            </>
+          }
+          <h5>{uError}</h5>
           <div>
             <ol className='list-decimal'>
               {numberArr.map((item, index) => (
                 <li key={index}>We {item.operator} {item.value} with {item.prevalue} and result is {item.total}.
                   <button onClick={() => handleDelete(item.id)} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Delete</button>
-                  <button className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Edit</button></li>
+                  <button onClick={() => handleEdit(item)} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Edit</button></li>
               ))}
             </ol>
           </div>
