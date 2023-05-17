@@ -53,17 +53,27 @@ function App() {
     } else if (add == "" && sub != "" && multi == "" && div == "") {
       if (sub * 1 - 10 || sub == 10) {
         if (sub > -1) {
-
-          set(push(ref(db, 'calculatorapp/')), {
-            prevalue: saveTotal,
-            value: sub * 1,
-            operator: "Substraction",
-            total: saveTotal - sub,
-          }).then(() => {
-            console.log(" Sub data send")
-          })
-          setError("")
-
+          if (!haveValue) {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: 0,
+              value: sub * 1,
+              operator: "Substraction",
+              total: saveTotal - sub,
+            }).then(() => {
+              console.log(" Sub data send")
+            })
+            setError("")
+          } else {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: saveTotal,
+              value: sub * 1,
+              operator: "Substraction",
+              total: saveTotal - sub,
+            }).then(() => {
+              console.log(" Sub data send")
+            })
+            setError("")
+          }
         } else {
           setError("Not a positive number")
         }
@@ -77,15 +87,27 @@ function App() {
         if (multi == 0) {
           setError("Cannot Multiply by 0")
         } else if (multi >= 1) {
-          set(push(ref(db, 'calculatorapp/')), {
-            prevalue: saveTotal,
-            value: multi * 1,
-            operator: "Multiply",
-            total: multi * 1 * saveTotal * 1,
-          }).then(() => {
-            console.log(" Multiply data send")
-          })
-          setError("")
+          if (!haveValue) {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: 0,
+              value: multi * 1,
+              operator: "Multiply",
+              total: multi * 1 * saveTotal * 1,
+            }).then(() => {
+              console.log(" Multiply data send")
+            })
+            setError("")
+          } else {
+            set(push(ref(db, 'calculatorapp/')), {
+              prevalue: saveTotal,
+              value: multi * 1,
+              operator: "Multiply",
+              total: multi * 1 * saveTotal * 1,
+            }).then(() => {
+              console.log(" Multiply data send")
+            })
+            setError("")
+          }
         } else {
           setError("Not a positive number")
         }
