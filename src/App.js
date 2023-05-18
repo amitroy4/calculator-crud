@@ -283,7 +283,7 @@ function App() {
     <section className='container mx-auto mt-[20px]'>
       <h1 className='font-black text-4xl text-center mb-[20px]'>Smart calculator</h1>
       <div className='flex justify-between'>
-        <div className='w-[50%] bg-blue-400 p-5'>
+        <div className='w-[50%] bg-emerald-100 p-5'>
 
           <div className='flex justify-between'>
             <div>
@@ -297,7 +297,7 @@ function App() {
           </div>
 
           <div className='flex justify-center mt-[50px]'>
-            <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded block">Button</button>
+            <button onClick={handleSubmit} className="bg-emerald-600 hover:bg-emerald-400	 text-white font-bold py-2 px-4 border border-emerald-600	 rounded block">Button</button>
           </div>
 
           <div className='text-center mt-[20px] mb-[50px]'>
@@ -322,23 +322,26 @@ function App() {
           </div>
 
         </div>
-        <div className='w-[50%] bg-red-400 p-5'>
+        <div className='w-[50%] bg-cyan-100		 p-5'>
           <div className='text-center font-medium text-2xl'>History</div>
+          <div className='flex justify-center mt-4 mb-4'>
           {
             !edit && <>We {operatorId}
-              <input onChange={(e) => setU1(e.target.value)} value={u1} className='ml-[5px] mr-[5px]' /> with
-              <input onChange={(e) => setU2(e.target.value)} value={u2} className='ml-[5px] mr-[5px]' />
-              <button onClick={handleUpdate} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Update</button>
-              <button onClick={handleCancel} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Cancel</button>
+              <input onChange={(e) => setU1(e.target.value)} value={u1} className='ml-[5px] mr-[5px] w-20' /> with
+              <input onChange={(e) => setU2(e.target.value)} value={u2} className='ml-[5px] mr-[5px] w-20' />
+              <button onClick={handleUpdate} className="bg-cyan-700 hover:bg-cyan-500 text-white text-xs font-normal py-1 px-1 border border-cyan-700 rounded ml-[5px]">Update</button>
+              <button onClick={handleCancel} className="bg-cyan-700 hover:bg-cyan-500 text-white text-xs font-normal py-1 px-1 border border-cyan-700 rounded ml-[5px]">Cancel</button>
             </>
           }
+          </div>
+          
           <h5>{uError}</h5>
-          <div>
-            <ol className='list-decimal'>
+          <div className='flex justify-center'>
+            <ol className='w-[80%] list-none  [&>*:nth-child(even)]:bg-cyan-200	  [&>*:nth-child(odd)]:bg-cyan-50	'>
               {numberArr.map((item, index) => (
-                <li key={index}>We {item.operator} {item.value} with {item.prevalue} and result is {item.total}.
-                  <button onClick={() => handleDelete(item.id)} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Delete</button>
-                  <button onClick={() => handleEdit(item)} className="bg-blue-300 hover:bg-blue-500 text-white text-xs font-normal py-1 px-1 border border-blue-500 rounded ml-[5px]">Edit</button></li>
+                <li key={index} className='pt-2 pb-2 pl-4'>{index+1}. We {item.operator} {item.value} with {item.prevalue} and result is {item.total}.
+                  <button onClick={() => handleDelete(item.id)} className="bg-cyan-700 hover:bg-cyan-500	 text-white text-xs font-normal py-1 px-1 border border-cyan-700 rounded ml-[5px]">Delete</button>
+                  <button onClick={() => handleEdit(item)} className="bg-cyan-700 hover:bg-cyan-500	 text-white text-xs font-normal py-1 px-1 border border-cyan-700 rounded ml-[5px]">Edit</button></li>
               ))}
             </ol>
           </div>
