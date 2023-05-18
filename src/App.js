@@ -63,7 +63,7 @@ function App() {
               prevalue: 0,
               value: sub * 1,
               operator: "Substraction",
-              total: saveTotal - sub,
+              total: 0 - sub*1,
             }).then(() => {
               console.log(" Sub data send")
             })
